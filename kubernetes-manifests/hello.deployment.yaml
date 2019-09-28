@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+spec:
+  serviceAccountName: secretsmanagerrw
+  volumes:
+    - name: vol
+      emptyDir: {}
+  containers:
+  - name: myapp-container
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+    volumeMounts:
+      - name: vol
+        mountPath: /tmp
+  initContainers:
+  - name: aws-secrets-manager
+    image: jicowan/aws-secrets-manager
+    env:
+      - name: AWS_REGION
+        value: "us-east-1"
+      - name: SECRET_NAME
+        value: "catsndogs"
+    volumeMounts:
+      - name: vol
+        mountPath: /tmp
+
+
+# This Deployment manifest defines:
+# - single-replica deployment of the container image, with label "app: aws-secrets-manager"
+# - Pod exposes port 8080
+# - specify PORT environment variable to the container process
+# Syntax reference https://kubernetes.io/docs/concepts/configuration/overview/
