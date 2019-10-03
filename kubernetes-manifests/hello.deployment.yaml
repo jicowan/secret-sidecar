@@ -13,7 +13,7 @@ spec:
   containers:
   - name: myapp-container
     image: busybox:1.28
-    command: ['sh', '-c', 'echo $(cat /tmp/secret) && sleep 3600']
+    command: ['sh', '-c', 'echo $(cat /tmp/CATS_N_DOGS) && sleep 3600']
     volumeMounts:
       - name: vol
         mountPath: /tmp
@@ -25,6 +25,8 @@ spec:
         value: "us-east-1"
       - name: SECRET_NAME
         value: "catsndogs"
+      - name: MOUNT_NAME
+        value: "CATS_N_DOGS"
     volumeMounts:
       - name: vol
         mountPath: /tmp

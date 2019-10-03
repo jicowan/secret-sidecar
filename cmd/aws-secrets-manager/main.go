@@ -69,12 +69,16 @@ func main() {
 		writeOutput(decodedBinarySecret)
 	}
 }
+
 func writeOutput(output string) {
-	f, err := os.Create("/tmp/secret")
+  //os.Setenv("MOUNT_NAME", "CATS_N_DOGS")
+  MountName := os.Getenv("MOUNT_NAME")
+
+	f, err := os.Create("/tmp/" + MountName)
 	if err != nil {
 		return
 	}
 	defer f.Close()
-	
+
 	f.WriteString(output)
 }
