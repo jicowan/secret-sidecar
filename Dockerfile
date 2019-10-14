@@ -8,5 +8,6 @@ COPY . ./
 RUN go build -o /app -v ./cmd/aws-secrets-manager
 
 FROM alpine
+RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
 COPY --from=build /app /.
 ENTRYPOINT ["/app"]
