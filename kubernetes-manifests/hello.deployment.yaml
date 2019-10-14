@@ -19,7 +19,7 @@ spec:
         mountPath: /tmp
   initContainers:
   - name: aws-secrets-manager
-    image: jicowan/aws-secrets-manager:v0.2
+    image: jicowan/jicowan_aws-secrets-manager:v0.3
     env:
       - name: AWS_REGION
         value: "us-east-1"
