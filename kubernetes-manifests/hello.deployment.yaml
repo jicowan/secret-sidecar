@@ -4,12 +4,21 @@ metadata:
   name: myapp-pod
   labels:
     app: myapp
+  annotations: 
+    secret.k8s.aws/secret-name: catsndogs 
+    secret.k8s.aws/region: us-east-1
 spec:
   serviceAccountName: secretsmanagerrw
   volumes:
     - name: vol
       emptyDir:
         medium: Memory
+    - name: podinfo
+      downwardAPI:
+        items:
+          - path: "annotations"
+            fieldRef: 
+              fieldPath: metadata.annotations
   containers:
   - name: myapp-container
     image: busybox:1.28
@@ -28,3 +37,5 @@ spec:
     volumeMounts:
       - name: vol
         mountPath: /tmp
+      - name: podinfo
+        mountPath: /etc/podinfo
