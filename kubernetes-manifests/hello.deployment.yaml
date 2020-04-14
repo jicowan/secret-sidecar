@@ -13,12 +13,6 @@ spec:
     - name: vol
       emptyDir:
         medium: Memory
-    - name: podinfo
-      downwardAPI:
-        items:
-          - path: "annotations"
-            fieldRef: 
-              fieldPath: metadata.annotations
   containers:
   - name: myapp-container
     image: busybox:1.28
@@ -31,11 +25,13 @@ spec:
     image: jicowan/jicowan_aws-secrets-manager:v0.3
     env:
       - name: AWS_REGION
-        value: "us-east-1"
+        valueFrom:
+          fieldRef: 
+            fieldPath: metadata.annotations['secret.k8s.aws/region']
       - name: SECRET_NAME
-        value: "catsndogs"
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.annotations['secret.k8s.aws/secret-name']
     volumeMounts:
       - name: vol
         mountPath: /tmp
-      - name: podinfo
-        mountPath: /etc/podinfo
