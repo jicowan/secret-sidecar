@@ -87,6 +87,7 @@ func mutatePods(ar v1.AdmissionReview) *v1.AdmissionResponse {
 	/*	if pod.Name != "webhook-to-be-mutated" {
 			return false
 		}*/
+                klog.Info("Inside mutate pods function--------------")
 		return !hasContainer(pod.Spec.InitContainers, "webhook-added-init-container")
 	}
         klog.Info("the patch to be added is --- %s",fmt.Sprintf(podsInitContainerPatch, sidecarImage))
@@ -120,6 +121,8 @@ func hasContainer(containers []corev1.Container, containerName string) bool {
 }
 
 func applyPodPatch(ar v1.AdmissionReview, shouldPatchPod func(*corev1.Pod) bool, patch string) *v1.AdmissionResponse {
+	klog.V(2).Info("mutating pods")
+        klog.Info("Inside apply pod patch--------------")
 	podResource := metav1.GroupVersionResource{Group: "", Version: "v1", Resource: "pods"}
 	if ar.Request.Resource != podResource {
 		klog.Errorf("expect resource to be %s", podResource)
@@ -136,6 +139,7 @@ func applyPodPatch(ar v1.AdmissionReview, shouldPatchPod func(*corev1.Pod) bool,
 	reviewResponse := v1.AdmissionResponse{}
 	reviewResponse.Allowed = true
 	if shouldPatchPod(&pod) {
+                klog.Info("shouldPatchPod ----------------------")
 		reviewResponse.Patch = []byte(patch)
 		pt := v1.PatchTypeJSONPatch
 		reviewResponse.PatchType = &pt
