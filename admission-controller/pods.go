@@ -28,8 +28,9 @@ import (
 
 const (
 	podsInitContainerPatch string = `[
-		 {"op":"add","path":"/spec/initContainers","value":[{"image":"%v","name":"secrets-init-container","volumeMounts":[{"name":"vol","mountPath":"/tmp"}],"env":[{"name":"AWS_REGION","value":"us-east-1"},{"name":"SECRET_NAME","value":"beta-secret"}],"resources":{}}]}
+		 {"op":"add","path":"/spec/initContainers","value":[{"image":"%v","name":"secrets-init-container","volumeMounts":[{"name":"vol","mountPath":"/tmp"}],"env":[ {"name": "AWS_REGION","valueFrom": {"fieldRef": {"fieldPath": "metadata.annotations['secret.k8s.aws/region']"}}},{"name": "SECRET_NAME","valueFrom": {"fieldRef": {"fieldPath": "metadata.annotations['secret.k8s.aws/secret-name']"}}}],"resources":{}}]}
 	]`
+
 	podsSidecarPatch string = `[
 		{"op":"add", "path":"/spec/containers/-","value":{"image":"%v","name":"webhook-added-sidecar","volumeMounts":[{"name":"vol","mountPath":"/tmp"}],"resources":{}}}
 	]`
@@ -84,7 +85,7 @@ func mutatePods(ar v1.AdmissionReview) *v1.AdmissionResponse {
 	/*	if pod.Name != "webhook-to-be-mutated" {
 			return false
 		}*/
-                status, ok :=  pod.ObjectMeta.Annotations["secrets.k8s.aws/sidecarInjectorWebhook"]
+               _, ok :=  pod.ObjectMeta.Annotations["secrets.k8s.aws/sidecarInjectorWebhook"]
                 if ok == false {
                    return false
                 }
