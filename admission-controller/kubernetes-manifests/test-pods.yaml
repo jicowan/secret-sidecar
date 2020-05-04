@@ -14,6 +14,10 @@ spec:
   template:
     metadata:
       creationTimestamp: null
+      annotations:
+        secrets.k8s.aws/sidecarInjectorWebhook: enabled
+        secret.k8s.aws/secret-name: beta-secret
+        secret.k8s.aws/region: us-east-1 
       labels:
         run: webserver
     spec:
