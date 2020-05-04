@@ -1,9 +1,5 @@
 package main
 
-// Use this code snippet in your app.
-// If you need more information about configurations or implementing the sample code, visit the AWS docs:
-// https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/setting-up.html
-
 import (
 	"fmt"
 	"os"
@@ -15,10 +11,14 @@ import (
 )
 
 func main() {
-	//os.Setenv("SECRET_NAME", "catsndogs")
-	//os.Setenv("AWS_REGION", "us-east-1")
 	SecretName := os.Getenv("SECRET_NAME")
+	if SecretName == "" {
+		fmt.Println("SecretName variable not set")
+	}
 	AWSRegion := os.Getenv("AWS_REGION")
+	if AWSRegion == "" {
+		fmt.Println("AWSRegion variable not set")
+	}
 	sess, err := session.NewSession()
 	svc := secretsmanager.New(sess, &aws.Config{
 		Region: aws.String(AWSRegion),
